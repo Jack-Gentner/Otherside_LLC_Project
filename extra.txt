@@ -1,0 +1,93 @@
+ 
+<html> 
+    <?php 
+
+    $conn = new mysqli("localhost", "OtherSide", "xQk0IW!1[[o-ER[2", "otherside llc");
+
+    if ($conn->connect_error) {
+        echo "Connection error";
+    }
+    else if(empty("Name") || empty("Description")) {
+        return false;
+        echo "Eror, try again.";
+    }
+    else if (isset($_REQUEST["Name"]) && isset($_REQUEST["Description"])) {
+        $Name = $_REQUEST["Name"];
+        $Description = $_REQUEST["Description"];
+
+        $stmt = $conn->prepare("INSERT INTO servicetable(ServiceName, ServiceDescription) VALUES (?, ?)");
+        $stmt->bind_param("ss", $Name, $Description);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+
+    ?>
+
+    <head> 
+        <title> Add Service</title>
+        <link rel="stylesheet" type="text/CSS" href="Style.css">        
+    </head>
+
+    <body>
+
+        <div id="bar"> 
+            Other Side Lawn and Landscape
+        </div>
+
+        <br>
+
+        <div> 
+            <form id="clientForm" method="get"> 
+
+                <h1> Add Service </h1> <br>
+                Service Name: <input name="Name" id="Name" type="text"> <br> <br>
+                Service Description: <input name="Description" id="Description" type="text"> <br> <br>
+
+                <button type="submit"> Enter Service </button>
+                <button> <a href="Home.php"> Return Home</a></button>
+         
+            </form>
+        </div>
+
+        <br>
+        <br>
+
+        <div> 
+            <?php
+                $conn = new mysqli("localhost", "OtherSide", "xQk0IW!1[[o-ER[2", "otherside llc");
+
+                if ($conn->connect_error) {
+                    echo "Connection error";
+                }
+                else {
+                $sql = 'SELECT ServiceName, ServiceDescription FROM servicetable order by ServiceID';
+                $result = $conn->query($sql);
+                $conn->close();
+                }
+
+            ?>
+
+            <table id="table1">
+
+                <tr> 
+                    <th> Service Name</th>
+                    <th> Service Description</th>
+                </tr>
+                <?php   
+                            while($rows=$result->fetch_assoc())
+                            {
+                        ?>
+                        <tr>
+                            <td><?php echo $rows['ServiceName'];?></td>
+                            <td><?php echo $rows['ServiceDescription'];?></td>
+                        </tr>
+                        <?php
+                            }
+                        ?>
+            <table>
+        </div>
+    </body> 
+    <php
+    ?>
+</html>
